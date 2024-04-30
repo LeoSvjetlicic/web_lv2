@@ -19,24 +19,28 @@ let walletAmount = 5000;
 
 let items = [
   {
-    name: "Luka",
+    name: "ovca",
     price: 100,
   },
   {
-    name: "Miha",
+    name: "koza",
     price: 120,
   },
   {
-    name: "Marko",
+    name: "krava",
     price: 102,
   },
   {
-    name: "Para",
+    name: "konj",
     price: 99,
   },
   {
-    name: "Leo",
+    name: "pas",
     price: 104,
+  },
+  {
+    name: "macka",
+    price: 106,
   },
 ];
 let instructions = [
@@ -56,11 +60,21 @@ function buy() {
   } else {
     console.log("You have succesfuly purchase the following items");
     console.log("-------------");
-    for (let i = 0; i < cart.length; i++) {
-      console.log(cart[i].name);
-    }
+    const itemMap = new Map();
+    cart.forEach((item) => {
+      if (itemMap.has(item.name)) {
+        itemMap.set(item.name, itemMap.get(item.name) + 1);
+      } else {
+        itemMap.set(item.name, 1);
+      }
+    });
+
+    itemMap.forEach((quantity, itemName) => {
+      const index = items.findIndex((item) => item.name === itemName);
+      const item = items[index];
+      console.log(`${itemName} ${quantity} ${item.price * quantity}`);
+    });
     cart = [];
-    walletAmount = 5000;
   }
 }
 
@@ -86,11 +100,11 @@ function addToCart(itemName, amount) {
     // equivalent of %s in C printf (or %d, %f, etc.)
     console.log(`Buying ${item.name} with price ${item.price}`);
 
-    if (item.price > walletAmount) {
-      console.log("Not enough money");
-      return;
-    } else {
-      for (let i = 0; i < amount; i++) {
+    for (let i = 0; i < amount; i++) {
+      if (item.price > walletAmount) {
+        console.log("Not enough money");
+        return;
+      } else {
         cart.push(item);
         walletAmount -= item.price;
       }
